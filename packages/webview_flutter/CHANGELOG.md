@@ -1,3 +1,7 @@
+## 0.3.24+1
+
+* Support inline media on iPhone if the HTML5 content requests it
+
 ## 0.3.24
 
 * Keep handling deprecated Android v1 classes for backward compatibility.
