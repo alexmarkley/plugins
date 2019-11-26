@@ -265,7 +265,9 @@ class CreationParams {
     this.userAgent,
     this.autoMediaPlaybackPolicy =
         AutoMediaPlaybackPolicy.require_user_action_for_all_media_types,
-  }) : assert(autoMediaPlaybackPolicy != null);
+    this.inlineMediaPlaybackPolicy = InlineMediaPlaybackPolicy.no_preference,
+  })  : assert(autoMediaPlaybackPolicy != null),
+        assert(inlineMediaPlaybackPolicy != null);
 
   /// The initialUrl to load in the webview.
   ///
@@ -297,6 +299,8 @@ class CreationParams {
 
   /// Which restrictions apply on automatic media playback.
   final AutoMediaPlaybackPolicy autoMediaPlaybackPolicy;
+
+  final InlineMediaPlaybackPolicy inlineMediaPlaybackPolicy;
 
   @override
   String toString() {

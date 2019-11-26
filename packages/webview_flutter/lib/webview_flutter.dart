@@ -92,6 +92,21 @@ enum AutoMediaPlaybackPolicy {
   always_allow,
 }
 
+/// Specifies the InlineMediaPlayback policy (specifically for iOS)
+/// See: https://developer.apple.com/documentation/webkit/wkwebviewconfiguration/1614793-allowsinlinemediaplayback
+// The method channel implementation is marshalling this enum to the value's index, so the order
+// is important.
+enum InlineMediaPlaybackPolicy {
+  /// HTML5 video players will appear inline with HTML content. (the default on iPads)
+  allow_inline_media,
+
+  /// HTML5 video players will use their own pop-up video player. (the default on iPhones)
+  disallow_inline_media,
+
+  /// Don't set the preference and let the OS decide based on a platform-specific default.
+  no_preference
+}
+
 final RegExp _validChannelNames = RegExp('^[a-zA-Z_][a-zA-Z0-9_]*\$');
 
 /// A named channel for receiving messaged from JavaScript code running inside a web view.
@@ -144,8 +159,10 @@ class WebView extends StatefulWidget {
     this.userAgent,
     this.initialMediaPlaybackPolicy =
         AutoMediaPlaybackPolicy.require_user_action_for_all_media_types,
+    this.inlineMediaPlaybackPolicy = InlineMediaPlaybackPolicy.no_preference,
   })  : assert(javascriptMode != null),
         assert(initialMediaPlaybackPolicy != null),
+        assert(inlineMediaPlaybackPolicy != null),
         super(key: key);
 
   static WebViewPlatform _platform;
@@ -301,6 +318,8 @@ class WebView extends StatefulWidget {
   /// The default policy is [AutoMediaPlaybackPolicy.require_user_action_for_all_media_types].
   final AutoMediaPlaybackPolicy initialMediaPlaybackPolicy;
 
+  final InlineMediaPlaybackPolicy inlineMediaPlaybackPolicy;
+
   @override
   State<StatefulWidget> createState() => _WebViewState();
 }
@@ -365,6 +384,7 @@ CreationParams _creationParamsfromWidget(WebView widget) {
     javascriptChannelNames: _extractChannelNames(widget.javascriptChannels),
     userAgent: widget.userAgent,
     autoMediaPlaybackPolicy: widget.initialMediaPlaybackPolicy,
+    inlineMediaPlaybackPolicy: widget.inlineMediaPlaybackPolicy,
   );
 }
 

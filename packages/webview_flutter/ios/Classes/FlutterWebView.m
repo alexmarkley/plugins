@@ -68,6 +68,8 @@
     configuration.userContentController = userContentController;
     [self updateAutoMediaPlaybackPolicy:args[@"autoMediaPlaybackPolicy"]
                         inConfiguration:configuration];
+    [self updateInlineMediaPlaybackPolicy:args[@"inlineMediaPlaybackPolicy"]
+                          inConfiguration:configuration];
 
     _webView = [[WKWebView alloc] initWithFrame:frame configuration:configuration];
     _navigationDelegate = [[FLTWKNavigationDelegate alloc] initWithChannel:_channel];
@@ -306,6 +308,22 @@
       NSLog(@"webview_flutter: unknown auto media playback policy: %@", policy);
   }
 }
+
+- (void)updateInlineMediaPlaybackPolicy:(NSNumber*)policy
+                        inConfiguration:(WKWebViewConfiguration*)configuration {
+  switch ([policy integerValue]) {
+    case 0:  // allow_inline_media
+      configuration.allowsInlineMediaPlayback = true;
+      break;
+    case 1:  // disallow_inline_media
+      configuration.allowsInlineMediaPlayback = false;
+      break;
+    case 2: // no_preference
+      break;
+    default:
+      NSLog(@"webview_flutter: unknown inline media playback policy: %@", policy);
+    }
+  }
 
 - (bool)loadRequest:(NSDictionary<NSString*, id>*)request {
   if (!request) {
